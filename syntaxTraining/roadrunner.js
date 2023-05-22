@@ -17,7 +17,7 @@ function roadRunner(speed, area) {
             break;
     }
     
-    let narushenie = speed - limit;
+    const narushenie = speed - limit;
     
     if (narushenie <= 20) {
         status = "speeding";
