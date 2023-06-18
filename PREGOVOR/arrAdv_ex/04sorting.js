@@ -1,6 +1,11 @@
 function sorting(arr) {
-  console.log(arr.sort((a, b) => a - b));
-  console.log(sorting);
+  let sortArr = arr.sort((a, b) => a - b);
+  let result = [];
+
+  for (let i = 0; i < arr.length; i++) {
+    console.log(sortArr[i]);
+    console.log(sortArr[sortArr.length - 1 - i]);
+  }
 }
 sorting([1, 21, 3, 52, 69, 63, 31, 2, 18, 94]);
 console.log(`-------------------------------`);
