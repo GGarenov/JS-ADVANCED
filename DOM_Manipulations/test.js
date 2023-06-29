@@ -1,4 +1,4 @@
 let list = document.getElementById("list");
 let li = document.createElement("li");
-li.textContent = "test3";
+li.textContent = "Test 3";
 list.appendChild(li);
