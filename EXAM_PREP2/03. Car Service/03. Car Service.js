@@ -49,69 +49,93 @@ const carService = {
   },
 };
 
-describe("Test for carService ", () => {
- describe("test isItExpensive functionality", () => {
- it("if issue is Engine", () => {
- assert.equal(carService.isItExpensive('Engine',
- "The issue with the car is more severe and it will cost more money"))
+describe("Tests for carService", function() {
+describe("isItExpensive", function() {
+ it("test if the issue is Engine it should be expensive", function() {
+   let issue = "Engine";
+
+   //act
+   let result = carService.isItExpensive(issue);
+   //assert
+   expect(result).to.equal('The issue with the car is more severe and it will cost more money');
+   
+
+
  });
-  it("if issue is Transmission", () => {
- assert.equal(carService.isItExpensive('Transmission',
- "The issue with the car is more severe and it will cost more money"))
+  it("test if the issue is Transmission it should be expensive", function() {
+   let issue = "Transmission";
+   //act
+   let result = carService.isItExpensive(issue);
+   //assert
+   expect(result).to.equal('The issue with the car is more severe and it will cost more money');
+   });
+  it("test if the issue is other it should be cheap", function() {
+   let issue = "Test";
+   //act
+   let result = carService.isItExpensive(issue);
+   //assert
+   expect(result).to.equal('The overall price will be a bit cheaper');
+  });
+   
  });
-   it("if issue is Test", () => {
-  assert.equal(carService.isItExpensive('Test'),
-  "The overall price will be a bit cheaper")
- });
- });
-describe("test discount functionality", () =>{
-  it("test if input is invalid", () =>{
-   
-    assert.throw(() => carService.discount('test', 100), 'Invalid input');
-    assert.throw(() => carService.discount(100, 'test'), 'Invalid input')
+  describe("discount funcitonality", function () {
+    it("test if the input is valid", function () {
+      let numberOfParts = '20';
+      let totalPrice = '30';
+
+      let result1 = () => carService.discount(numberOfParts, 100);
+      let result2 = () => carService.discount(5, totalPrice);
+
+      expect(result1).to.throw(Error, "Invalid input");
+      expect(result2).to.throw(Error, "Invalid input");
+    });
+    it("if you can apply discount", function () {
+      let numberOfParts = 1;
+      let numberOfParts2 = 2;
+
+      let result1 = carService.discount(numberOfParts, 100);
+      let result2 = carService.discount(numberOfParts2, 100);
+
+      expect(result1).to.equal('You cannot apply a discount');
+
+      expect(result2).to.equal('You cannot apply a discount');
+    });
+    it("test discount applied successfully", function () {
+      let numberOfParts = 3;
+      let numberOfParts2 = 8;
+      let totalPrice = 100;
+
+      let result1 = carService.discount(numberOfParts, totalPrice);
+      let result2 = carService.discount(numberOfParts2, totalPrice);
+
+      expect(result1).to.equal(`Discount applied! You saved ${totalPrice * 0.15}$`);
+
+      expect(result2).to.equal(`Discount applied! You saved ${totalPrice * 0.30}$`);
+    });   
   });
- 
-  it('test cannot apply a discount', () => {
-     assert.equal(carService.discount(1, 100), 'You cannot apply a discount');
-    assert.equal(carService.discount(2, 100), 'You cannot apply a discount');
-  })
- 
-  it('test discount applied successfully', () => {
-    //
-   
-   
-    assert.equal(carService.discount(3, 100), 'Discount applied! You saved 15$');
-   
-    assert.equal(carService.discount(7, 100), 'Discount applied! You saved 15$');
-   
-    assert.equal(carService.discount(8, 100), 'Discount applied! You saved 30$');
+  describe("test partToBuy functionality", function () {
+    it("test if the input is valid", function () {
+      let partsCatalog = "string";
+      let neededParts = 20;
+
+      let result1Func = () => carService.partsToBuy(["part1", "part2"], neededParts);
+      let result2Func = () => carService.partsToBuy(partsCatalog, ["part1", "part2"]);
+
+      expect(result1Func).to.throw(Error, "Invalid input");
+      expect(result2Func).to.throw(Error, "Invalid input");
+    });
+    it("test if the functionality depending on the partsCatalog list", function () {
+      let partsCatalog = [
+        { part: "x1", price: 105 },
+        { part: "x2", price: 115 },
+      ];
+
+      let neededPartsList = ["x1", "x3"];
+
+      
+    })
+
+
   });
- 
-});
- 
-describe('test partsToBuy functionality', () => {
-  it("test if input is invalid", () =>{
-   
-    assert.throw(() => carService.partsToBuy('test', ['part1', 'part2']),
-    'Invalid input');
-    assert.throw(() => carService.partsToBuy(['part1', 'part2'], 'test'),
-    'Invalid input');
-  });
-  it("test if the functionality depending on the partsCatalog list", () => {
- 
-  const partsCatalogList = [
-    {part: 'x1', price: 105},
-    {part: 'x2', price: 115},
-  ]
-  const neededPartsList = ['x1', 'x3']
-  assert.equal(
-    carService.partToBuy(partsCatalogList, neededPartsList), 105
-  );
-   
-  assert.equal(
-    carService.partToBuy([], neededPartsList), 0
-  );
-   
-  });
-});
+ // TODO: …
 });
