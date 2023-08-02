@@ -1,112 +1,106 @@
 window.addEventListener("load", solve);
 
 function solve() {
-    //1. Select all DOM elements which we will use.
-    let titleElement = document.getElementById('post-title');
-    let categoryElement = document.getElementById('post-category');
-    let contentElement = document.getElementById('post-content');
-    let publishButton = document.getElementById('publish-btn');
-    let reviewList = document.getElementById('review-list')
-    let publishList = document.getElementById('published-list')
-    let clearButton = document.getElementById('clear-btn')
+    let titleEl = document.getElementById('post-title');
+    let categoryEl = document.getElementById('post-category');
+    let contentEl = document.getElementById('post-content');
+    let publishBtn = document.getElementById('publish-btn');
+    let ulList = document.getElementById('review-list');
+    let clearBtn = document.getElementById('clear-btn');
+    let publishedListUl = document.getElementById('published-list')
 
-    clearButton.addEventListener('click', clearPostsHandler)
-    publishButton.addEventListener('click', publishHandler);
-    //2. Implement Publish logic
+
+    publishBtn.addEventListener('click', publishHandler);
+
+    function clearAll() {
+        titleEl.value = '';
+        categoryEl.value = '';
+        contentEl.value = '';
+    }
+
+
+
+//publish Btn function
     function publishHandler(e) {
-        let title = titleElement.value;
-        let category = categoryElement.value;
-        let content = contentElement.value;
+        e.preventDefault();
 
-        if (title === '' || category === '' || content === '') {
-            return;
-        }
-
-        let post = createPost(title, category, content);
-        reviewList.appendChild(post);
-
-        titleElement.value = '';
-        categoryElement.value = '';
-        contentElement.value = '';
-
+        const titleElvalue = titleEl.value;
+        const categoryElvalue = categoryEl.value;
+        const contentElvalue = contentEl.value;
         
-    }
+        if (!titleElvalue ||
+            !categoryElvalue ||
+            !contentElvalue) {
+            return
+        }
+        
+        const listItem = document.createElement('li');
+        listItem.classList.add('rpost');
+        const articleEl = document.createElement('article');
+        const h4El = document.createElement('h4');
+        h4El.textContent = titleElvalue;
+        const categoryP = document.createElement('p');
+        categoryP.textContent = `Category: ${categoryElvalue}`
+        const contentP = document.createElement('p');
+        contentP.textContent = `Content: ${contentElvalue}`
 
-    //2.1 Extract createPost function for creatig the HTML structure of a post
-    function createPost(title, category, content) {
-        let liElement = document.createElement('li');
-        liElement.classList.add('rpost');
+        articleEl.appendChild(h4El);
+        articleEl.appendChild(categoryP);
+        articleEl.appendChild(contentP);
+        
+        //define buttons
 
-        let article = document.createElement('article');
-
-        let titleH4 = document.createElement('h4');
-        titleH4.textContent = title;
-        let categoryParagraph = document.createElement('p');
-        categoryParagraph.textContent = `Category: ${category}`;
-        let contentParagraph = document.createElement('p');
-        contentParagraph.textContent = `Content: ${content}`;
-
-        article.appendChild(titleH4);
-        article.appendChild(categoryParagraph);
-        article.appendChild(contentParagraph);
-
-        let editBtn = document.createElement('button');
-        editBtn.textContent = 'Edit';
+        const editBtn = document.createElement('button');
         editBtn.classList.add('action-btn', 'edit');
-        editBtn.addEventListener('click', editHandler)
+        editBtn.textContent = 'Edit';
 
-        let approveBtn = document.createElement('button');
-        approveBtn.textContent = 'Approve';
+
+        const approveBtn = document.createElement('button');
         approveBtn.classList.add('action-btn', 'approve');
-        approveBtn.addEventListener('click', approveHandler)
+        approveBtn.textContent = 'Approve';
 
-        liElement.appendChild(article);
-        liElement.appendChild(editBtn);
-        liElement.appendChild(approveBtn);
+        //append the created elements
 
-        return liElement;
+    
+
+        listItem.appendChild(articleEl);
+        listItem.appendChild(editBtn);
+        listItem.appendChild(approveBtn);
+
+        ulList.appendChild(listItem);
+
+        clearAll();
+
+
+        editBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            titleEl.value = titleElvalue;
+            categoryEl.value = categoryElvalue;
+            contentEl.value = contentElvalue;
+
+            listItem.remove();
+
+        });
+
+
+        approveBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            listItem.removeChild(editBtn);
+            listItem.removeChild(approveBtn);
+
+            publishedListUl.appendChild(listItem);
+
+            clearBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+            
+                listItem.remove();
+
+
+            })
+
+        })
+
+
     }
-    //3. Implement Edit logic
-
-    function editHandler(e) {
-        //1. Remove html representation of the post (li element) from review list
-        let liElement = e.target.parentElement;
-        liElement.remove();
-
-
-        //2. Add current post title, category and content to input fields in publish form
-        let titleH4 = liElement.querySelector('h4');
-        let titleValue = titleH4.textContent;
-
-        let paragraphs = liElement.querySelectorAll('p');
-        let categoryValue = paragraphs[0].textContent;
-        let contentValue = paragraphs[1].textContent;
-
-        titleElement.value = titleValue;
-        categoryElement.value = categoryValue.substring(10);
-        contentElement.value = contentValue.substring(9);
-
-    }
-
-    //4. Implement Approve logic
-    function approveHandler(e) {
-        let liElement = e.target.parentElement;
-        liElement.remove()
-        let buttons = Array.from(liElement.querySelectorAll('button'));
-        buttons.forEach(b => b.remove());
-
-        publishList.appendChild(liElement);
-
-
-        
-    }
-
-    //5. Implement Clear posts logic
-
-    function clearPostsHandler() {
-        let postsToClear = Array.from(publishList.children);
-        postsToClear.forEach(p => p.remove());
-        }
-
 
 }
